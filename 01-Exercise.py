@@ -19,7 +19,16 @@ style.use('ggplot')
 
 # Reading csv file from
 df = pd.read_csv('tesla.csv', parse_dates=True, index_col=0)
-print(df[['Open', 'High']].head())
 
-df['Adj Close'].plot()
+# Calculating moving average value and storing in same dataframe with a new column
+df['100ma'] = df['Adj Close'].rolling(window=100, min_periods=0).mean()
+print(df.tail())
+
+ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
+ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+
+ax1.plot(df.index, df['Adj Close'])
+ax1.plot(df.index, df['100ma'])
+ax2.plot(df.index, df['Volume'])
+
 plt.show()
